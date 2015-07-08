@@ -1,0 +1,3 @@
+#Needed for cron job. In most PHP installs, this should be enabled by default anyway
+php_flag register_argc_argv 1
+DirectoryIndex index.php
