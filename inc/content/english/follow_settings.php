@@ -27,6 +27,8 @@ if ($q1a['id'] == "")  {
  <a href="javascript:ajax_follow_settings_tab('tab4');">Auto DM Message</a>
 </div><div class="tab_main" id="tab5">
  <a href="javascript:ajax_follow_settings_tab('tab5');">Search to Follow</a>
+</div><div class="tab_main" id="tab6">
+ <a href="javascript:ajax_follow_settings_tab('tab6');">Search</a>
 </div>
 </div>
 

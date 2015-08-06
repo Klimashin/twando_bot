@@ -3,23 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/config.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/callback.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/index.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/ajax/ajax.follow_settings.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/content/english/ajax.not_logged_in.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/install_tables.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/class/class.cron.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/content/english/ajax.follow_settings_inc.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/ajax/ajax.index.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/redirect.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/class/class.mainfuncs.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/content/english/ajax.index_inc.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/scripts/ajax_scripts.js</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/class/class.mysql.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/tweet_settings.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/cron_follow.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/follow_settings.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/cron_instructions.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/install_tables_for_search_script.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/content/english/cron_instructions.php</file>
         </group>
     </open-files>
 </project-private>

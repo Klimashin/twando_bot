@@ -18,7 +18,8 @@ if ( ($argv[1] != CRON_KEY) and ($_GET['cron_key'] != CRON_KEY) ) {
  echo mainFuncs::push_response(23);
  $run_cron = false;
 } else {
- if ($cron->get_cron_state('follow') == 1) {
+ if ($cron->get_cron_state('follow') == 1 || $cron->get_cron_state('upd_info') == 1
+         ||  $cron->get_cron_state('search') == 1) {
   echo mainFuncs::push_response(24);
   $run_cron = false;
  }

@@ -226,7 +226,7 @@ class cronFuncs {
 
  //Defines
   global $db;
-  
+
   if ($this->do_log == 1) {
    //Serialize affected users
    if (is_array($affected_users)) {$affected_users = serialize($affected_users);}
@@ -358,7 +358,7 @@ class cronFuncs {
   $return_array = array();
 
   //Get rate limit in API 1.1 Format
-  $rate_con = $connection->get('application/rate_limit_status',array("resources" => 'followers,friends,users'));
+  $rate_con = $connection->get('application/rate_limit_status',array("resources" => 'followers,friends,users,search'));
 
   //Friends and followers
   $return_array['fw_remaining'] = $rate_con->resources->followers->{'/followers/ids'}->remaining;
@@ -367,9 +367,11 @@ class cronFuncs {
   $return_array['fr_remaining'] = $rate_con->resources->friends->{'/friends/ids'}->remaining;
   $return_array['fr_limit'] = $rate_con->resources->friends->{'/friends/ids'}->limit;
   $return_array['fr_reset'] = $rate_con->resources->friends->{'/friends/ids'}->reset - gmmktime();
+  $return_array['tw_limit'] = $rate_con->resources->search->{'/search/tweets'}->limit;
+  $return_array['tw_remaining'] = $rate_con->resources->search->{'/search/tweets'}->remaining;
 
   //Users
-  $return_array['us_remaining'] = $rate_con->resources->users->{'/users/show'}->remaining;
+  $return_array['us_remaining'] = $rate_con->resources->users->{'/users/show/:id'}->remaining;
   $return_array['ul_remaining'] = $rate_con->resources->users->{'/users/lookup'}->remaining;
 
   return $return_array;

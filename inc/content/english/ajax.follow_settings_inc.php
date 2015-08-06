@@ -210,10 +210,32 @@ if ( ($_REQUEST['a'] == 'stf1update') and ($_REQUEST['search_term']) ) {
  }
 }
    break;
+
+    case 'tab6':
+?>
+    <h2>Search to Follow</h2>
+    <?=$response_msg?>
+    <?php
+    if (!empty($_SESSION['search_queue_error'])) {
+        echo $_SESSION['search_queue_error'];
+        unset($_SESSION['search_queue_error']);
+    }
+    ?>
+    <p>Enter search keys using the input below. User handles should started with @. Keywords should started with #.
+    You can mix different values in a single input like this: #apple,@Ford,#claus,... Enteries without symbol # or @ would be
+    dropped. All search keys stored in table DBPREFIX + search_queue.</p>
+    <form method="post" action="" name="search_queue_form" id="search_queue_form" onsubmit="ajax_follow_settings_update('tab6','search_queue_form'); return false;">
+        <div class="cron_row">
+            <div class="cron_left">Search term:</div>
+            <div class="cron_right"><input type="text" name="search_str" id="search_str" class="input_box_style" value="" /></div>
+        </div>
+        <input type="submit" value="Search" class="submit_button_style"/>
+    </form>
+    <?php
   //End of switch
   }
  //End of if $_REQUEST['tab_id']
  }
- 
+
 ?>
 

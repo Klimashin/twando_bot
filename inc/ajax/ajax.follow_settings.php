@@ -231,24 +231,30 @@ if (mainFuncs::is_logged_in() != true) {
 
         $search_str = $_REQUEST['search_str'];
         $search_keys = explode($DELIMETER, $search_str);
-
         foreach ($search_keys as $key) {
-            if (empty($key)) { continue; }
+            try {
+                if (empty($key)) { continue; }
+                $key = trim($key);
+                // determine search key type
+                if (substr($key, 0 ,1) == '#') {
+                    $search_type = $SEARCH_TYPE_BY_KEYWORD;
+                } elseif (substr($key, 0, 1) == '@') {
+                    $search_type = $SEARCH_TYPE_BY_HANDLE;
+                } else {
+                    continue;
+                }
 
-            // determine search key type
-            if (substr($key, 0 ,1) == '#') {
-                $search_type = $SEARCH_TYPE_BY_KEYWORD;
-            } elseif (substr($key, 0, 1) == '@') {
-                $search_type = $SEARCH_TYPE_BY_HANDLE;
-            } else {
-                continue;
+                $key = substr($key, 1);
+                $db->query("
+                    INSERT INTO " . DB_PREFIX . "search_queue
+                    (related_user_id, search_key, search_type)
+                    VALUES ('"
+                        . $db->prep($_REQUEST['twitter_id']) .
+                        "', '{$db->prep($key)}', {$db->prep($search_type)});
+                ");
+            } catch (Exception $e) {
+                $response_msg = '<span class="error">' . print_r($e->getMessage()) . '</span>';
             }
-
-            $db->query("
-                INSERT INTO " . DB_PREFIX . "search_queue
-                (related_user_id, search_key, search_type)
-                VALEUS ({$_REQUEST['twitter_id']}, {$key}, {$search_type});
-            ");
         }
     break;
   //End of tab switch

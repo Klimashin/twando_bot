@@ -45,7 +45,7 @@ commented out and the script will try and work it out for you, but it's better
 to specify this if possible
 */
 
-//define('BASE_LINK_URL','http://127.0.0.1:80/');
-
-
+//define('BASE_LINK_URL','http://127.0.0.1:80/')
+define('ROBOT_ACCOUNTS_TO_FOLLOW', 5);
+define('CRON_SEARCH_AUTH_ID', 2601096577);
 ?>
