@@ -58,7 +58,7 @@ class mySqlCon {
     if ($this->output_error == 1) {
      echo 'Attempting to reconnect to MySQL...' . "\n";
     }
-    $this->db_close(); 
+    $this->db_close();
     $this->db_connect();
     $this->query($res,2);
    } else {
@@ -146,6 +146,12 @@ class mySqlCon {
 
    $query = "INSERT INTO " . DB_PREFIX . "authed_users (" . $cols  . ") VALUES (" . $values . ")";
    $this->query($query);
+
+   //create robot_follow column;
+    $this->query("
+        ALTER TABLE " . DB_PREFIX . "extracted_user_data
+                ADD `datetime_robot_follow_{$this->prep($tw_user['id'])}` DATETIME DEFAULT NULL;
+    ");
   } else {
    //Update
    foreach ($tw_user as $col => $value) {
@@ -163,8 +169,14 @@ class mySqlCon {
  */
 
  public function get_user_data($user_id) {
-  $q1  = $this->query("SELECT * FROM " . DB_PREFIX . "authed_users WHERE id = '" . $this->prep($user_id) . "'");
-  return ($this->fetch_array($q1));
+    $q1  = $this->query("
+        SELECT au.*, uc.*
+          FROM " . DB_PREFIX . "authed_users au
+          LEFT JOIN " . DB_PREFIX . "users_config uc
+               ON au.id=uc.user_id
+         WHERE au.id={$this->prep($user_id)};
+    ");
+    return ($this->fetch_array($q1));
  }
 
 
@@ -292,7 +304,7 @@ class mySqlCon {
    //Nearly used a jQuery tooltip, but bloaty and not really needed
    echo '<a href="https://twitter.com/account/redirect_by_id?id=' . $qchecka['twitter_id'] . '" target="_blank">';
    echo  '<img title="' . $lang_ops[0] . ': ' . $qchecka['screen_name'] . " \n";
-   echo  $lang_ops[1] . ': ' . $qchecka['actual_name'] . " \n"; 
+   echo  $lang_ops[1] . ': ' . $qchecka['actual_name'] . " \n";
    echo  $lang_ops[2] . ': ' . number_format($qchecka['friends_count']) . " \n";
    echo  $lang_ops[3] . ': ' . number_format($qchecka['followers_count']) . " \n";
    echo  $lang_ops[4] . ': ' . date(TIMESTAMP_FORMAT,strtotime($qchecka['last_updated'])) . " \n";

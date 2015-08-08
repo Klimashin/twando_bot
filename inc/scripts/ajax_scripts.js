@@ -1,5 +1,5 @@
 /*
-Twando.com Free PHP Twitter Application 
+Twando.com Free PHP Twitter Application
 http://www.twando.com/
 */
 
@@ -97,10 +97,3 @@ function ajax_multi_account_update(tab_id,form_id) {
  var form_data = $("#" + form_id).serialize() + '&update_type=update_data&form_id=' + form_id + '&tab_id=' + tab_id + '&page_id=' +  $('#page_id').val() + '&twitter_id=' + $('#twitter_id').val();
  $("#update_div").html(ajax_load).load('inc/ajax/ajax.multi_account_functions.php',form_data);
 }
-
-
-
-
-
-
-

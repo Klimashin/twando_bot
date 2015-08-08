@@ -48,6 +48,11 @@ if (mainFuncs::is_logged_in() != true) {
   $db->query("OPTIMIZE TABLE " . DB_PREFIX . "scheduled_tweets");
   $db->query("DROP TABLE `". DB_PREFIX . "fw_" . $_REQUEST['id'] . "`");
   $db->query("DROP TABLE `". DB_PREFIX . "fr_" . $_REQUEST['id'] . "`");
+  $db->query("DELETE FROM `". DB_PREFIX . "users_config` WHERE user_id=" . $_REQUEST['id']);
+  $db->query("
+        ALTER TABLE " . DB_PREFIX . "extracted_user_data
+                DROP COLUMN `datetime_robot_follow_{$_REQUEST['id']}`;
+    ");
   $response_msg = mainFuncs::push_response(4);
  }
 

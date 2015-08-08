@@ -63,7 +63,17 @@ while ($followersRequestsRemaining > 3 && $tweetsRequestsRemaining > 3) {
     $this_cursor = $search_queue_record['last_search_cursor'];
     $related_user = $db->get_user_data($search_queue_record['related_user_id']);
 
-    if ($search_queue_record['search_type'] == 1) { //search by user
+    if (substr($search_queue_record['search_key'], 0 ,1) == '#') {
+        $search_type = 'search_by_keyword';
+    } elseif (substr($search_queue_record['search_key'], 0, 1) == '@') {
+        $search_type = 'search_by_user';
+    } else {
+        //
+    }
+
+    $search_queue_record['search_key'] = substr($search_queue_record['search_key'], 1);
+
+    if ($search_type == 'search_by_user') { //search by user
         $followersRequestsRemaining--;
 
         $followersList = $connection->get(
@@ -98,14 +108,18 @@ while ($followersRequestsRemaining > 3 && $tweetsRequestsRemaining > 3) {
         }
 
         foreach ($followersList->ids as $id) {
-            createUserDataRecord($id, $search_queue_record['related_user_id']);
+            createUserDataRecord(
+                $id,
+                $search_queue_record['related_user_id'],
+                $search_queue_record['search_key']
+            );
         }
 
         logToFile('search.log', 'Successfuly extracted ' . count((array)$followersList->ids)
                 . ' records for search_key ' . $search_queue_record['search_key']);
 
         searchRecordUpdateCursor($search_queue_record['id'], $followersList->next_cursor_str);
-    } else { //search by keyword
+    } elseif ($search_type == 'search_by_keyword') { //search by keyword
         $tweetsRequestsRemaining--;
 
         if ($this_cursor > 0) {
@@ -151,7 +165,11 @@ while ($followersRequestsRemaining > 3 && $tweetsRequestsRemaining > 3) {
         }
 
         foreach ($content->statuses as $tweet) {
-            createUserDataRecord($tweet->user->id_str, $search_queue_record['related_user_id']);
+            createUserDataRecord(
+                $tweet->user->id_str,
+                $search_queue_record['related_user_id'],
+                $search_queue_record['search_key']
+            );
         }
 
         logToFile('search.log', 'Successfuly extracted ' . count((array)$content->statuses)
@@ -176,21 +194,22 @@ function getSearchQueueRecord()
     global $db;
 
     return $db->fetch_array($db->query("
-        SELECT id, search_key, search_type, related_user_id, last_search_cursor
+        SELECT id, search_key, last_search_cursor, related_user_id
           FROM " . DB_PREFIX . "search_queue
          WHERE last_search_cursor != '0' ORDER BY id ASC LIMIT 1
     "));
 }
 
-function createUserDataRecord($user_id, $related_user_id)
+function createUserDataRecord($user_id, $related_user_id, $usedKey)
 {
     global $db;
 
     $createDateTime = date('Y-m-d H:i:s');
     $db->query("
         INSERT INTO " . DB_PREFIX . "extracted_user_data
-        (user_id, datetime_created, related_user_id)
-        VALUES ('{$db->prep($user_id)}', '{$db->prep($createDateTime)}', '{$db->prep($related_user_id)}')
+        (user_id, datetime_created, related_user_id, used_search_key)
+        VALUES ('{$db->prep($user_id)}', '{$db->prep($createDateTime)}', '{$db->prep($related_user_id)}',"
+        . "'{$db->prep($usedKey)}')
         ON DUPLICATE KEY UPDATE user_id = user_id
     ");
 }
@@ -199,9 +218,12 @@ function searchRecordUpdateCursor($id, $cursor)
 {
     global $db;
 
+    $currentDatetime = date('Y-m-d H:i:s');
+
     $db->query("
         UPDATE " . DB_PREFIX . "search_queue
-           SET last_search_cursor = '{$cursor}'
+           SET last_search_cursor = '{$cursor}',
+               last_search_date='{$db->prep($currentDatetime)}'
          WHERE id='{$id}'
     ");
 }

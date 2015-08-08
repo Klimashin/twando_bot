@@ -212,24 +212,35 @@ if ( ($_REQUEST['a'] == 'stf1update') and ($_REQUEST['search_term']) ) {
    break;
 
     case 'tab6':
+        $config = $db->get_user_data($q1a['id'])
 ?>
-    <h2>Search to Follow</h2>
+    <h2>Search Bot Configuration</h2>
     <?=$response_msg?>
-    <?php
-    if (!empty($_SESSION['search_queue_error'])) {
-        echo $_SESSION['search_queue_error'];
-        unset($_SESSION['search_queue_error']);
-    }
-    ?>
-    <p>Enter search keys using the input below. User handles should started with @. Keywords should started with #.
-    You can mix different values in a single input like this: #apple,@Ford,#claus,... Enteries without symbol # or @ would be
-    dropped. All search keys stored in table DBPREFIX + search_queue.</p>
-    <form method="post" action="" name="search_queue_form" id="search_queue_form" onsubmit="ajax_follow_settings_update('tab6','search_queue_form'); return false;">
+    <p>
+        Here you can enable bot to follow searched data and configure selection rules, that
+        would be used in following script.
+    </p>
+    <form method="POST" id="bot_settings" onsubmit="ajax_follow_settings_update('tab6','bot_settings'); return false;">
         <div class="cron_row">
-            <div class="cron_left">Search term:</div>
-            <div class="cron_right"><input type="text" name="search_str" id="search_str" class="input_box_style" value="" /></div>
+            <div class="cron_left">Bot enabled:</div>
+            <div class="cron_right">
+                <input type="checkbox" name="bot_status" value="1" <?php
+                if ($config['follow_bot_status']) { echo 'checked="checked"'; } ?>  value="<?= $config['follow_rate'] ?>" />
+            </div>
         </div>
-        <input type="submit" value="Search" class="submit_button_style"/>
+        <div class="cron_row">
+            <div class="cron_left">Bot follow rate:</div>
+            <div class="cron_right">
+                <input type="text" name="follow_rate" class="input_box_style" value="<?= $config['follow_rate'] ?>" />
+            </div>
+        </div>
+        <div class="cron_row">
+            <div class="cron_left">Follow rule:</div>
+            <div class="cron_right">
+                <textarea name="follow_rule" class="input_box_style" ><?= $config['follow_rule'] ?></textarea>
+            </div>
+        </div>
+        <input type="submit" value="Submit changes"/>
     </form>
     <?php
   //End of switch

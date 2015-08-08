@@ -39,6 +39,8 @@ $response_msgs[30] = array('text'=>'Follow/unfollow requests sent to API','type'
 $response_msgs[31] = array('text'=>'Tweet posts sent to API','type'=>'success');
 $response_msgs[32] = array('text'=>'Cron run complete','type'=>'success');
 $response_msgs[33] = array('text'=>'Twando was unable to look up those users. This could be a temporary issue with the Twitter API, or the users might not exist.','type'=>'error');
+$response_msgs[34] = array('text'=>'Failed to update config!','type'=>'error');
+$response_msgs[35] = array('text'=>'Config updated succesfully','type'=>'success');
 
 //English cron text
 $cron_txts = array();

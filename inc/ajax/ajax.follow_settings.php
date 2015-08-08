@@ -224,38 +224,26 @@ if (mainFuncs::is_logged_in() != true) {
    break;
 
   case 'tab6':
-        // local canstants
-        $SEARCH_TYPE_BY_HANDLE = 1;
-        $SEARCH_TYPE_BY_KEYWORD = 2;
-        $DELIMETER = ',';
+    $bot_enabled = intval($_REQUEST['bot_status']);
+    $follow_rate = intval($_REQUEST['follow_rate']);
+    $follow_rule = $db->prep($_REQUEST['follow_rule']);
 
-        $search_str = $_REQUEST['search_str'];
-        $search_keys = explode($DELIMETER, $search_str);
-        foreach ($search_keys as $key) {
-            try {
-                if (empty($key)) { continue; }
-                $key = trim($key);
-                // determine search key type
-                if (substr($key, 0 ,1) == '#') {
-                    $search_type = $SEARCH_TYPE_BY_KEYWORD;
-                } elseif (substr($key, 0, 1) == '@') {
-                    $search_type = $SEARCH_TYPE_BY_HANDLE;
-                } else {
-                    continue;
-                }
+    try {
+        $db->query("
+            INSERT INTO " . DB_PREFIX . "users_config
+                (user_id, follow_bot_status, follow_rate, follow_rule)
+            VALUES ('{$db->prep($_REQUEST['twitter_id'])}', {$bot_enabled}, {$follow_rate}, '{$follow_rule}')
+                   ON DUPLICATE KEY UPDATE
+                   follow_bot_status={$bot_enabled},
+                   follow_rate={$follow_rate},
+                   follow_rule='{$follow_rule}';
+        ");
 
-                $key = substr($key, 1);
-                $db->query("
-                    INSERT INTO " . DB_PREFIX . "search_queue
-                    (related_user_id, search_key, search_type)
-                    VALUES ('"
-                        . $db->prep($_REQUEST['twitter_id']) .
-                        "', '{$db->prep($key)}', {$db->prep($search_type)});
-                ");
-            } catch (Exception $e) {
-                $response_msg = '<span class="error">' . print_r($e->getMessage()) . '</span>';
-            }
-        }
+        $response_msg = mainFuncs::push_response(35);
+    } catch (Exception $ex) {
+        $response_msg = mainFuncs::push_response(34);
+    }
+
     break;
   //End of tab switch
   }
