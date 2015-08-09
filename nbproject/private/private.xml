@@ -3,23 +3,31 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/callback.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/content/english/follow_settings.php</file>
             <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/content/english/search_keys_conf.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/ajax/ajax.follow_settings.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/cron_search.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/content/english/lang.php</file>
             <file>file:/home/kamuniaft/NetBeansProjects/twando/search_keys_conf.php</file>
             <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/content/english/cron_instructions.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/log_settings.php</file>
             <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/content/english/ajax.follow_settings_inc.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/ajax/ajax.index.php</file>
             <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/class/class.mainfuncs.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/scripts/ajax_scripts.js</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/cron_instructions.php</file>
             <file>file:/home/kamuniaft/NetBeansProjects/twando/cron_robot_follow.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/class/class.mysql.php</file>
             <file>file:/home/kamuniaft/NetBeansProjects/twando/alter_tables_for_search_script.php</file>
-            <file>file:/home/kamuniaft/NetBeansProjects/twando/install_tables_for_search_script.php</file>
             <file>file:/home/kamuniaft/NetBeansProjects/twando/cron_update_info.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/content/english/ajax.log_settings_inc.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/callback.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/ajax/ajax.log_settings.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/cron_bot_send_tweets.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/ajax/ajax.follow_settings.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/cron_search.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/cron_generate_tweets.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/ajax/ajax.index.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/scripts/ajax_scripts.js</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/class/class.mysql.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/cron_instructions.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/install_tables_for_search_script.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/cron_tweet.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/inc/content/english/log_settings.php</file>
+            <file>file:/home/kamuniaft/NetBeansProjects/twando/follow_settings.php</file>
         </group>
     </open-files>
 </project-private>

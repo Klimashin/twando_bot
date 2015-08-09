@@ -17,7 +17,7 @@ $db->output_error = 1;
 //Add search key to extracted data
 $db->query("
     ALTER TABLE " . DB_PREFIX . "extracted_user_data
-            ADD used_search_key VARCHAR(255) DEFAULT NULL;
+            ADD used_search_key INT DEFAULT NULL;
 ");
 
 //create and fill table for user config

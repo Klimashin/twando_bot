@@ -59,7 +59,7 @@ while ($userConfig = mysql_fetch_array($configs, MYSQL_ASSOC)) {
                LIMIT {$counter}
     ");
 
-    $friendshipCounter = [];
+    $friendshipCounter = array();
     $protected_accs = 0;
 
     while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {

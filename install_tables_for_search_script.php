@@ -39,7 +39,7 @@ $db->query("
     `datetime_created` DATETIME DEFAULT NULL,
     `datetime_updated` DATETIME DEFAULT NULL,
     `datetime_robot_follow` DATETIME DEFAULT NULL,
-    `used_search_key` VARCHAR(255) DEFAULT NULL,
+    `used_search_key` INT DEFAULT NULL,
     PRIMARY KEY  (`user_id`),
     INDEX (used_search_key),
     INDEX (screen_name)

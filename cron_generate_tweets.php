@@ -63,10 +63,9 @@ $cron->set_cron_state('gen_tweets',0);
 
 function bind_to_template($replacements, $template)
 {
-    return preg_replace_callback('/{{(.+?)}}/', function($matches) use ($replacements)
-    {
-        return $replacements[$matches[1]];
-    }, $template);
+    $GLOBALS['replacements'] = $replacements;
+    $callback = create_function('$matches', 'return $GLOBALS["replacements"][$matches[1]];');
+    return preg_replace_callback('/{{(.+?)}}/', $callback , $template);
 }
 
 function addTweetToQueue($tweet_content, $user_id)

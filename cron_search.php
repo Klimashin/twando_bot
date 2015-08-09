@@ -108,7 +108,7 @@ while ($followersRequestsRemaining > 3 && $tweetsRequestsRemaining > 3) {
             createUserDataRecord(
                 $id,
                 $search_queue_record['related_user_id'],
-                $search_queue_record['search_key']
+                $search_queue_record['id']
             );
         }
 
@@ -163,7 +163,7 @@ while ($followersRequestsRemaining > 3 && $tweetsRequestsRemaining > 3) {
             createUserDataRecord(
                 $tweet->user->id_str,
                 $search_queue_record['related_user_id'],
-                $search_queue_record['search_key']
+                $search_queue_record['id']
             );
         }
 
@@ -203,7 +203,7 @@ function createUserDataRecord($user_id, $related_user_id, $usedKey)
         INSERT INTO " . DB_PREFIX . "extracted_user_data
         (user_id, datetime_created, related_user_id, used_search_key)
         VALUES ('{$db->prep($user_id)}', '{$db->prep($createDateTime)}', '{$db->prep($related_user_id)}',"
-        . "'{$db->prep($usedKey)}')
+        . "{$usedKey})
         ON DUPLICATE KEY UPDATE user_id = user_id
     ");
 }
