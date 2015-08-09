@@ -222,21 +222,4 @@ function searchRecordUpdateCursor($id, $cursor)
     ");
 }
 
-function is_connected()
-{
-    $connected = fopen("http://www.google.com:80/","r");
-    if($connected) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-function logToFile($filename, $msg)
-{
-    $fd = fopen($filename, "a");
-    $str = "[" . date("Y/m/d h:i:s", mktime()) . "] " . $msg;
-    fwrite($fd, $str . "\n");
-    fclose($fd);
-}
 //ENDOF FUNCTION DEFINITION AREA

@@ -46,6 +46,24 @@ define('TABLE_ROWS_PER_PAGE',10);
 define('TWITTER_TWEET_SEARCH_PP',100);
 define('TWITTER_USER_SEARCH_PP',20);
 
+function is_connected()
+{
+    $connected = fopen("http://www.google.com:80/","r");
+    if($connected) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function logToFile($filename, $msg)
+{
+    $fd = fopen($filename, "a");
+    $str = "[" . date("Y/m/d h:i:s", mktime()) . "] " . $msg;
+    fwrite($fd, $str . "\n");
+    fclose($fd);
+}
+
 /*
 Start
 */

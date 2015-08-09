@@ -27,6 +27,12 @@ $db->query("
     `follow_bot_status` BOOLEAN DEFAULT FALSE,
     `follow_rate` INT DEFAULT 5,
     `follow_rule` TEXT DEFAULT NULL,
+    `tweet_bot_status` BOOLEAN DEFAULT FALSE,
+    `tweet_template` TEXT DEFAULT NULL,
+    `tweet_query` TEXT DEFAULT NULL,
+    `tweeting_rate` INT DEFAULT 5,
+    `tweet_generation_rate` INT DEFAULT 5,
+    `tweet_generation_offset` INT DEFAULT 0,
     PRIMARY KEY  (user_id)
     );
 ");
@@ -84,3 +90,26 @@ $db->query("
 $db->query("CREATE INDEX used_search_key ON " . DB_PREFIX . "extracted_user_data(used_search_key);");
 $db->query("CREATE INDEX screen_name ON " . DB_PREFIX . "extracted_user_data(screen_name);");
 $db->query("OPTIMIZE TABLE " . DB_PREFIX . "extracted_user_data;");
+
+//create table for tweeting bot
+$db->query("
+    CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "tweets_queue` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `user_id` varchar(48) NOT NULL,
+    `tweet_content` TEXT DEFAULT NULL,
+    `datetime_created` DATETIME DEFAULT NULL,
+    `datetime_tweeted` DATETIME DEFAULT NULL,
+    PRIMARY KEY  (id),
+    INDEX (user_id)
+    );
+");
+
+$db->query("
+    INSERT INTO " . DB_PREFIX . "cron_status
+        (cron_name) VALUES ('gen_tweets');
+");
+
+$db->query("
+    INSERT INTO " . DB_PREFIX . "cron_status
+        (cron_name) VALUES ('bot_tweets');
+");

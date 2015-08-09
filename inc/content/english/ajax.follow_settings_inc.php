@@ -222,10 +222,10 @@ if ( ($_REQUEST['a'] == 'stf1update') and ($_REQUEST['search_term']) ) {
     </p>
     <form method="POST" id="bot_settings" onsubmit="ajax_follow_settings_update('tab6','bot_settings'); return false;">
         <div class="cron_row">
-            <div class="cron_left">Bot enabled:</div>
+            <div class="cron_left">Follow bot enabled:</div>
             <div class="cron_right">
                 <input type="checkbox" name="bot_status" value="1" <?php
-                if ($config['follow_bot_status']) { echo 'checked="checked"'; } ?>  value="<?= $config['follow_rate'] ?>" />
+                if ($config['follow_bot_status']) { echo 'checked="checked"'; } ?>/>
             </div>
         </div>
         <div class="cron_row">
@@ -234,10 +234,43 @@ if ( ($_REQUEST['a'] == 'stf1update') and ($_REQUEST['search_term']) ) {
                 <input type="text" name="follow_rate" class="input_box_style" value="<?= $config['follow_rate'] ?>" />
             </div>
         </div>
-        <div class="cron_row">
+        <div class="cron_row" style="margin-bottom: 5px;">
             <div class="cron_left">Follow rule:</div>
             <div class="cron_right">
                 <textarea name="follow_rule" class="input_box_style" ><?= $config['follow_rule'] ?></textarea>
+            </div>
+        </div>
+        <hr style="clear: both;"/>
+        <div class="cron_row">
+            <div class="cron_left">Tweet bot enabled:</div>
+            <div class="cron_right">
+                <input type="checkbox" name="tweet_bot_status" value="1" <?php
+                if ($config['tweet_bot_status']) { echo 'checked="checked"'; } ?> />
+            </div>
+        </div>
+        <div class="cron_row">
+            <div class="cron_left">Tweeting rate:</div>
+            <div class="cron_right">
+                <input type="text" name="tweeting_rate" class="input_box_style" value="<?= $config['tweeting_rate'] ?>" />
+            </div>
+        </div>
+        <div class="cron_row">
+            <div class="cron_left">Tweet generation rate:</div>
+            <div class="cron_right">
+                <input type="text" name="tweet_generation_rate" class="input_box_style"
+                       value="<?= $config['tweet_generation_rate'] ?>" />
+            </div>
+        </div>
+        <div class="cron_row">
+            <div class="cron_left">Tweet template:</div>
+            <div class="cron_right">
+                <textarea name="tweet_template" class="input_box_style" ><?= $config['tweet_template'] ?></textarea>
+            </div>
+        </div>
+        <div class="cron_row">
+            <div class="cron_left">Tweet query(Current generation offset is <?= $config['tweet_generation_offset'] ?>):</div>
+            <div class="cron_right">
+                <textarea name="tweet_query" class="input_box_style" ><?= $config['tweet_query'] ?></textarea>
             </div>
         </div>
         <input type="submit" value="Submit changes"/>

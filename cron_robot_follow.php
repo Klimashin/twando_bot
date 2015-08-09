@@ -64,10 +64,10 @@ while ($userConfig = mysql_fetch_array($configs, MYSQL_ASSOC)) {
 
     while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
         if ($db->is_on_fr_list($userConfig['user_id'], $row['user_id'])) {
-            logToFile('robot_fw.log', 'Already in friend list ' . $row['screen_name'] . '.');
+            $cron->store_cron_log(3, 'Already in friend list ' . $row['screen_name'] . '.', '');
             $followDateTime = date('Y-m-d H:i:s');
             $db->query("UPDATE " . DB_PREFIX . "extracted_user_data
-                           SET datetime_robot_follow = '{$followDateTime}'
+                           SET datetime_robot_follow_{$userConfig['user_id']} = '{$followDateTime}'
                          WHERE user_id='" . $row['user_id'] . "'");
             continue;
         }
@@ -88,7 +88,7 @@ while ($userConfig = mysql_fetch_array($configs, MYSQL_ASSOC)) {
         } else {
             $followDateTime = date('Y-m-d H:i:s');
             $db->query("UPDATE " . DB_PREFIX . "extracted_user_data
-                           SET datetime_robot_follow = '{$followDateTime}'
+                           SET datetime_robot_follow_{$userConfig['user_id']} = '{$followDateTime}'
                          WHERE user_id='" . $row['user_id'] . "'");
 
             if ($response->protected) {
@@ -107,21 +107,3 @@ while ($userConfig = mysql_fetch_array($configs, MYSQL_ASSOC)) {
 }
 
 $cron->set_cron_state('robot_fw',0);
-
-function is_connected()
-{
-    $connected = fopen("http://www.google.com:80/","r");
-    if($connected) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-function logToFile($filename, $msg)
-{
-    $fd = fopen($filename, "a");
-    $str = "[" . date("Y/m/d h:i:s", mktime()) . "] " . $msg;
-    fwrite($fd, $str . "\n");
-    fclose($fd);
-}

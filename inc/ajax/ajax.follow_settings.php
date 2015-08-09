@@ -227,16 +227,39 @@ if (mainFuncs::is_logged_in() != true) {
     $bot_enabled = intval($_REQUEST['bot_status']);
     $follow_rate = intval($_REQUEST['follow_rate']);
     $follow_rule = $db->prep($_REQUEST['follow_rule']);
+    $tweeting_rate = intval($_REQUEST['tweeting_rate']);
+    $tweet_bot_enabled = intval($_REQUEST['tweet_bot_status']);
+    $tweet_query = $db->prep($_REQUEST['tweet_query']);
+    $tweet_template = $db->prep($_REQUEST['tweet_template']);
+    $tweet_generation_rate = intval($_REQUEST['tweet_generation_rate']);
+
+    $current_query = $db->fetch_array(
+            $db->query("SELECT tweet_query FROM " . DB_PREFIX . "users_config
+                         WHERE user_id='{$db->prep($_REQUEST['twitter_id'])}';")
+    );
+
+    if (!empty($current_query) && strcasecmp($current_query['tweet_query'], $tweet_query) != 0) {
+        $db->query("UPDATE " . DB_PREFIX . "users_config
+                       SET tweet_generation_offset=0
+                     WHERE user_id='{$db->prep($_REQUEST['twitter_id'])}';");
+    }
 
     try {
         $db->query("
             INSERT INTO " . DB_PREFIX . "users_config
-                (user_id, follow_bot_status, follow_rate, follow_rule)
-            VALUES ('{$db->prep($_REQUEST['twitter_id'])}', {$bot_enabled}, {$follow_rate}, '{$follow_rule}')
+                (user_id, follow_bot_status, follow_rate, follow_rule, tweet_bot_status,
+                tweet_template, tweet_query, tweeting_rate, tweet_generation_rate)
+            VALUES ('{$db->prep($_REQUEST['twitter_id'])}', {$bot_enabled}, {$follow_rate}, '{$follow_rule}',
+                   {$tweet_bot_enabled}, '{$tweet_template}', '{$tweet_query}', {$tweeting_rate}, {$tweet_generation_rate})
                    ON DUPLICATE KEY UPDATE
                    follow_bot_status={$bot_enabled},
                    follow_rate={$follow_rate},
-                   follow_rule='{$follow_rule}';
+                   follow_rule='{$follow_rule}',
+                   tweet_bot_status={$tweet_bot_enabled},
+                   tweet_template='{$tweet_template}',
+                   tweet_query='{$tweet_query}',
+                   tweeting_rate={$tweeting_rate},
+                   tweet_generation_rate={$tweet_generation_rate};
         ");
 
         $response_msg = mainFuncs::push_response(35);

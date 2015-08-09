@@ -44,7 +44,7 @@ It's important you don't stop the cron jobs while they are running as logs will 
 and you will not be able to run the cron again (you will receive a "cron already running" error). You can reset the cron running status below if this happens.
 <br /><br />
 <?php
-$cron_types = array('follow','tweet','search','upd_info','robot_fw');
+$cron_types = array('follow','tweet','search','upd_info','robot_fw', 'bot_tweets', 'gen_tweets');
 foreach ($cron_types as $this_cron_type) {
  //Get data
  $q2  = $db->query("SELECT cron_state,last_updated FROM "  . DB_PREFIX . "cron_status WHERE cron_name = '" . $this_cron_type . "'");

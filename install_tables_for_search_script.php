@@ -40,7 +40,9 @@ $db->query("
     `datetime_updated` DATETIME DEFAULT NULL,
     `datetime_robot_follow` DATETIME DEFAULT NULL,
     `used_search_key` VARCHAR(255) DEFAULT NULL,
-    PRIMARY KEY  (`user_id`)
+    PRIMARY KEY  (`user_id`),
+    INDEX (used_search_key),
+    INDEX (screen_name)
     );
 ");
 
@@ -59,6 +61,16 @@ $db->query("
         (cron_name) VALUES ('robot_fw');
 ");
 
+$db->query("
+    INSERT INTO " . DB_PREFIX . "cron_status
+        (cron_name) VALUES ('gen_tweets');
+");
+
+$db->query("
+    INSERT INTO " . DB_PREFIX . "cron_status
+        (cron_name) VALUES ('bot_tweets');
+");
+
 //create and fill table for user config
 $db->query("
     CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "users_config` (
@@ -66,6 +78,12 @@ $db->query("
     `follow_bot_status` BOOLEAN DEFAULT FALSE,
     `follow_rate` INT DEFAULT 5,
     `follow_rule` TEXT DEFAULT NULL,
+    `tweet_bot_status` BOOLEAN DEFAULT FALSE,
+    `tweet_template` TEXT DEFAULT NULL,
+    `tweet_query` TEXT DEFAULT NULL,
+    `tweeting_rate` INT DEFAULT 5,
+    `tweet_generation_rate` INT DEFAULT 5,
+    `tweet_generation_offset` INT DEFAULT 0,
     PRIMARY KEY  (user_id)
     );
 ");
@@ -86,3 +104,15 @@ while ($twando_account = mysql_fetch_array($existingAccounts, MYSQL_ASSOC)) {
                 ADD `datetime_robot_follow_{$twando_account['id']}` DATETIME DEFAULT NULL;
     ");
 }
+
+$db->query("
+    CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "tweets_queue` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `user_id` varchar(48) NOT NULL,
+    `tweet_content` TEXT DEFAULT NULL,
+    `datetime_created` DATETIME DEFAULT NULL,
+    `datetime_tweeted` DATETIME DEFAULT NULL,
+    PRIMARY KEY  (id),
+    INDEX (user_id)
+    );
+");
