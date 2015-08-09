@@ -30,6 +30,8 @@ if ($run_cron != true) {
 $db->output_error = 1;
 //Set cron status
 $cron->set_cron_state('search', 1);
+$cron->set_log(1);
+$cron->set_user_id(CRON_SEARCH_AUTH_ID);
 
 //Get credentials
 $ap_creds = $db->get_ap_creds();
@@ -49,14 +51,11 @@ $followersReqLimit = intval($rate_con['fw_limit']);
 $followersRequestsRemaining = intval($rate_con['fw_remaining']);
 $tweetsRequestsRemaining = intval($rate_con['tw_remaining']);
 
-logToFile('search.log', 'SCRIPT STARTED');
-
 while ($followersRequestsRemaining > 3 && $tweetsRequestsRemaining > 3) {
     $search_queue_record = getSearchQueueRecord();
 
     if (empty($search_queue_record)) {
         $cron->set_cron_state('search',0);
-        logToFile('search.log', 'Nothing to search. Exiting..');
         exit();
     }
 
@@ -89,21 +88,19 @@ while ($followersRequestsRemaining > 3 && $tweetsRequestsRemaining > 3) {
         if ( (!is_object($followersList)) or ($connection->http_code != 200) ) {
             if (!is_connected()) { //internet connection seems broken
                 $cron->set_cron_state('search',0);
-                logToFile('search.log', 'Internet connection error. Exiting..');
                 exit();
             }
 
             if (in_array($connection->http_code, array(500, 502, 503, 504))) {
                 $cron->set_cron_state('search',0);
-                logToFile('search.log', 'Twitter server error occured. Exiting..');
                 exit();
             }
 
             //if Internet connection is up and Twitter servers are ok - then it probably
             // something wrong with our data. Let's skip it.
+            $cron->store_cron_log(4, 'Error occured while processing ' . $search_queue_record['search_key']
+                    . ' (http return code: ' . $connection->http_code . ') skipping..' ,'');
             searchRecordUpdateCursor($search_queue_record['id'], '0');
-            logToFile('search.log', 'Error occured while processing ' . $search_queue_record['search_key']
-                    . ' (http return code: ' . $connection->http_code . ') skipping..');
             continue;
         }
 
@@ -115,8 +112,8 @@ while ($followersRequestsRemaining > 3 && $tweetsRequestsRemaining > 3) {
             );
         }
 
-        logToFile('search.log', 'Successfuly extracted ' . count((array)$followersList->ids)
-                . ' records for search_key ' . $search_queue_record['search_key']);
+        $cron->store_cron_log(4, 'Successfuly extracted ' . count((array)$followersList->ids)
+                . ' records for search_key ' . $search_queue_record['search_key'] ,'');
 
         searchRecordUpdateCursor($search_queue_record['id'], $followersList->next_cursor_str);
     } elseif ($search_type == 'search_by_keyword') { //search by keyword
@@ -146,21 +143,19 @@ while ($followersRequestsRemaining > 3 && $tweetsRequestsRemaining > 3) {
         if ( (!is_object($content)) or ($connection->http_code != 200) ) {
             if (!is_connected()) { //internet connection seems broken
                 $cron->set_cron_state('search',0);
-                logToFile('search.log', 'Internet connection error. Exiting..');
                 exit();
             }
 
             if (in_array($connection->http_code, array(500, 502, 503, 504))) {
                 $cron->set_cron_state('search',0);
-                logToFile('search.log', 'Twitter server error occured. Exiting..');
                 exit();
             }
 
             //if Internet connection is up and Twitter servers are ok - then it probably
             // something wrong with our data. Let's skip it.
             searchRecordUpdateCursor($search_queue_record['id'], '0');
-            logToFile('search.log', 'Error occured while processing ' . $search_queue_record['search_key']
-                    . ' (http return code: ' . $connection->http_code . ') skipping..');
+            $cron->store_cron_log(4, 'Error occured while processing ' . $search_queue_record['search_key']
+                    . ' (http return code: ' . $connection->http_code . ') skipping..' ,'');
             continue;
         }
 
@@ -172,8 +167,8 @@ while ($followersRequestsRemaining > 3 && $tweetsRequestsRemaining > 3) {
             );
         }
 
-        logToFile('search.log', 'Successfuly extracted ' . count((array)$content->statuses)
-                . ' records for search_key ' . $search_queue_record['search_key']);
+        $cron->store_cron_log(4, 'Successfuly extracted ' . count((array)$content->statuses)
+                . ' records for search_key ' . $search_queue_record['search_key'] ,'');
 
         if (count((array)$content->statuses) < TWITTER_TWEET_SEARCH_PP) { //extracted last availaible tweets
             $next_max_id = 0;
@@ -186,7 +181,6 @@ while ($followersRequestsRemaining > 3 && $tweetsRequestsRemaining > 3) {
 }
 
 $cron->set_cron_state('search',0);
-logToFile('search.log', 'SCRIPT SUCCESSFULY FINISHED');
 
 //FUNCTION DEFINITION AREA
 function getSearchQueueRecord()

@@ -30,6 +30,8 @@ if ($run_cron != true) {
 $db->output_error = 1;
 //Set cron status
 $cron->set_cron_state('upd_info', 1);
+$cron->set_log(1);
+$cron->set_user_id(CRON_SEARCH_AUTH_ID);
 
 //Get credentials
 $ap_creds = $db->get_ap_creds();
@@ -45,8 +47,6 @@ $connection = new TwitterOAuth(
 
 $rate_con = $cron->get_remaining_hits();
 $usersRequestsRemaining = intval($rate_con['ul_remaining']);
-echo $usersRequestsRemaining;
-logToFile('upd_info.log', 'SCRIPT STARTED');
 
 while ($usersRequestsRemaining > 10) {
     $result = getIds($db);
@@ -57,13 +57,11 @@ while ($usersRequestsRemaining > 10) {
 
     if (empty($user_ids)) {
         $cron->set_cron_state('upd_info',0);
-        logToFile('upd_info.log', 'Nothing to update. Exiting..');
         exit();
     }
 
     if (!is_connected()) { //internet connection seems broken
         $cron->set_cron_state('upd_info',0);
-        logToFile('upd_info.log', 'Internet connection error. Exiting..');
         exit();
     }
 
@@ -71,22 +69,19 @@ while ($usersRequestsRemaining > 10) {
     $usersRequestsRemaining--;
 
     foreach ($users_info as $user_info) {
-        var_dump($user_info->screen_name);
         updateUserInfo($user_info);
         unset($user_ids[array_search($user_info->id_str, $user_ids)]);
     }
 
-    var_dump($user_ids);
     //delete users that was not found
     foreach ($user_ids as $id) {
         $db->query("DELETE FROM " . DB_PREFIX . "extracted_user_data WHERE user_id='" . $db->prep($id) . "'");
     }
 
-    logToFile('upd_info.log', 'Successfuly updated ' . count((array)$users_info) . ' records');
+    $cron->store_cron_log(5, 'Successfuly updated ' . count((array)$users_info) . ' records' ,'');
 }
 
 $cron->set_cron_state('upd_info', 0);
-logToFile('upd_info.log', 'SCRIPT SUCCESSFULY FINISHED');
 
 function getIds()
 {

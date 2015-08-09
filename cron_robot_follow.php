@@ -29,14 +29,14 @@ if ($run_cron != true) {
 
 if (!is_connected()) { //internet connection seems broken
     $cron->set_cron_state('robot_fw',0);
-    logToFile('robot_fw.log', 'Internet connection error. Exiting..');
     exit();
 }
 
 $db->output_error = 1;
 //Set cron status
 $cron->set_cron_state('robot_fw', 1);
-logToFile('robot_fw.log', 'SCRIPT STARTED');
+$cron->set_log(1);
+
 //Get credentials
 $ap_creds = $db->get_ap_creds();
 
@@ -48,17 +48,18 @@ $configs = $db->query("
 
 while ($userConfig = mysql_fetch_array($configs, MYSQL_ASSOC)) {
     $counter = $userConfig['follow_rate'];
+    $cron->set_user_id($userConfig['user_id']);
 
     $result = $db->query("
         SELECT user_id, related_user_id, screen_name
           FROM " . DB_PREFIX . "extracted_user_data
          WHERE datetime_robot_follow_{$userConfig['user_id']} IS NULL
                AND datetime_updated IS NOT NULL
-               {$follow_rule}
+               {$userConfig['follow_rule']}
                LIMIT {$counter}
     ");
 
-    $friendshipCounter = 0;
+    $friendshipCounter = [];
     $protected_accs = 0;
 
     while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
@@ -83,11 +84,8 @@ while ($userConfig = mysql_fetch_array($configs, MYSQL_ASSOC)) {
         $response = $connection->post('friendships/create',array('user_id' => $row['user_id']));
 
         if (!$connection->http_code == 200) {
-            logToFile('robot_fw.log', 'Failed to follow user ' . $row['screen_name'] . '. Deleting record..');
             $db->query("DELETE FROM " . DB_PREFIX . "extracted_user_data WHERE user_id='" . $row['user_id'] . "'");
         } else {
-            $friendshipCounter++;
-
             $followDateTime = date('Y-m-d H:i:s');
             $db->query("UPDATE " . DB_PREFIX . "extracted_user_data
                            SET datetime_robot_follow = '{$followDateTime}'
@@ -95,6 +93,8 @@ while ($userConfig = mysql_fetch_array($configs, MYSQL_ASSOC)) {
 
             if ($response->protected) {
                 $protected_accs++;
+            } else {
+                $friendshipCounter[] = $row['user_id'];
             }
 
             if (!empty($response->error)) {
@@ -103,12 +103,10 @@ while ($userConfig = mysql_fetch_array($configs, MYSQL_ASSOC)) {
         }
     }
 
-    logToFile('robot_fw.log', 'Succssfuly ' . $friendshipCounter . ' follow requests sent. There were '
-            . $protected_accs . ' protected accs.');
+    $cron->store_cron_log(3, count($friendshipCounter) . ' users have been successfuly followed', $friendshipCounter);
 }
 
 $cron->set_cron_state('robot_fw',0);
-logToFile('robot_fw.log', 'SCRIPT SUCCESSFULY FINISHED');
 
 function is_connected()
 {
