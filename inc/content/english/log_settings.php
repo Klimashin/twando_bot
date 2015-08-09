@@ -26,6 +26,12 @@ if ($q1a['id'] == "")  {
 </div><div class="tab_main" id="tab4">
  <a href="javascript:ajax_log_settings_tab('tab4');">Purge Log History</a>
 </div>
+<div class="tab_main" id="tab5">
+    <a href="javascript:ajax_log_settings_tab('tab5');">Bot Follow Logs</a>
+</div>
+<div class="tab_main" id="tab6">
+    <a href="javascript:ajax_log_settings_tab('tab6');">Bot Tweet Logs</a>
+</div>
 </div>
 
 <br style="clear: both;" />

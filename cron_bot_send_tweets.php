@@ -70,8 +70,7 @@ while ($userConfig = mysql_fetch_array($configs, MYSQL_ASSOC)) {
         //Log result - reasons for a non 200 include duplicate tweets, too many tweets
         //posted in a period of time, etc etc.
         if ($connection->http_code == 200) {
-            $cron->store_cron_log(7, $cron_txts[18] . $tweet['tweet_content']
-                    . $cron_txts[19] , ' on ' . date('Y-m-d H:i:s'),'');
+            $cron->store_cron_log(7, $cron_txts[18] . $tweet['tweet_content'] . $cron_txts[19] ,'');
         } else {
             $cron->store_cron_log(7, $cron_txts[18] . $tweet['tweet_content'] . $cron_txts[20],'');
         }

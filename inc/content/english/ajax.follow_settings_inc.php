@@ -218,7 +218,15 @@ if ( ($_REQUEST['a'] == 'stf1update') and ($_REQUEST['search_term']) ) {
     <?=$response_msg?>
     <p>
         Here you can enable bot to follow searched data and configure selection rules, that
-        would be used in following script.
+        would be used in following script. Also, you can set up bot that would be generate and send tweets.
+        Following rule should starts with "AND" (i.e. working following rule
+        would be "and followers_count>200"). Tweet generation rate and tweet rate are numbers of tweets created with
+        cron_generate_tweets and send with cron_bot_send_tweets respectively.
+        Tweet template example: "Hello @{{screen_name}}, having {{followers_count}} followers. You can have more!"
+        And tweet query for this would be : "SELECT screen_name, followers_count
+        from tw_extracted_user_data WHERE followers_count>1000"
+        Query offset parameter used to move deeper through db with each script execution.
+        It would be dropped to 0, when the query has been changed.
     </p>
     <form method="POST" id="bot_settings" onsubmit="ajax_follow_settings_update('tab6','bot_settings'); return false;">
         <div class="cron_row">

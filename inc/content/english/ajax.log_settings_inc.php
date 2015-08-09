@@ -28,6 +28,8 @@ if ($q1a['profile_image_url']) {
       break;
     case 'tab2':
     case 'tab3':
+    case 'tab5':
+    case 'tab6':
 
     if ($_REQUEST['tab_id'] == 'tab2') {
      $tab_vars['h2'] = 'Follow';
@@ -37,6 +39,14 @@ if ($q1a['profile_image_url']) {
      $tab_vars['h2'] = 'Tweet';
      $tab_vars['type'] = 2;
      $tab_vars['tab_id'] = 'tab3';
+    } elseif ($_REQUEST['tab_id'] == 'tab5') {
+     $tab_vars['h2'] = 'Bot Follow';
+     $tab_vars['type'] = 3;
+     $tab_vars['tab_id'] = 'tab5';
+    } elseif ($_REQUEST['tab_id'] == 'tab6') {
+     $tab_vars['h2'] = 'Bot Tweet';
+     $tab_vars['type'] = 7;
+     $tab_vars['tab_id'] = 'tab6';
     }
 
 ?>
@@ -44,7 +54,7 @@ if ($q1a['profile_image_url']) {
 <table class="data_table">
  <tr>
   <td class="heading">Log Content</td>
-  <?php if ($tab_vars['type'] == 1) { ?>
+  <?php if ($tab_vars['type'] == 1 || $tab_vars['type'] == 3) { ?>
   <td class="heading" width="445">Affected Users</td>
   <?php } ?>
   <td class="heading" width="130">Log Time</td>
@@ -64,7 +74,7 @@ while ($q2a = $db->fetch_array($q2)) {
 ?>
  <tr>
   <td><?=htmlspecialchars($q2a['log_text'])?></td>
-  <?php if ($tab_vars['type'] == 1) { ?>
+  <?php if ($tab_vars['type'] == 1 || $tab_vars['type'] == 3) { ?>
   <td>
 <?php
  $aff_users = unserialize($q2a['affected_users']);
